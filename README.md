@@ -16,3 +16,30 @@ You will also see any lint errors in the console.
 
 ## 🎁 Demo
 [Demo](https://media.giphy.com/media/SYpGmAZYXcSAcchCzx/giphy.gif)
+
+It's also live on a [website](https://star-wars-directory-challenge.netlify.com/)!
+
+## 📝 Specification
+- [x] At least two (2) web components.
+
+    I have an App component and a CharacterTable component.
+- [x] Pass data between components.
+
+    I pass the chosen character name, person data, and film data.
+- [x] Character description should be a combination of your own words plus the Character’s data
+
+   I included planet data so that people could know where the character is from and put it into my own words.
+- [x] Style the movie list to look like a table. Even and Odd rows should have their own style.
+
+    Check. I chose to use a Table API, but I still had to code in the even-odd CSS rule.
+- [x] The application should be responsive (breaking point – mobile friendly).
+
+    Check. Tested on mobile with Chrome Web Inspector.
+- [x] Use at least one (1) DOM event.
+
+    There's an onChange event for the character input (and there's also an onClick event for an easter egg of sorts shhhh don't tell anyone 👀.)
+- [x] Use iteration whenever is possible.
+
+    I initially was just using the [Ant Design UI library](https://ant.design/). Once I got a minimum viable product I wanted to see if I could get the dropdown functionality with just basic HTML, CSS, and JS. I found that you can use an input text tag and a datalist tag to make that happen. [This Codepen](https://codepen.io/BTM/pen/ZKxKPo?editors=1111) was very helpful.
+ 
+ 
