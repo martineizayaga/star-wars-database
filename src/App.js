@@ -184,7 +184,7 @@ function App() {
           </LazyLoad>
           <Title>Database</Title>
 
-          <input type="text" list="people" onChange={trackChange} placeholder="Pick your character"/>
+          <input autofocus type="text" list="people" onChange={trackChange} placeholder="Pick your character"/>
           <datalist id="people">
             {Object.keys(swapiPersonData).map((value, index) => {
                 return (

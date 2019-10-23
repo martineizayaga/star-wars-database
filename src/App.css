@@ -5,7 +5,7 @@
 
 .App {
   text-align: center;
-  cursor: url('./cursors/cursor.cur')
+  cursor: url('https://www.cursor.cc/cursor/219/79/cursor.png'), auto
 }
 
 .App-header {
