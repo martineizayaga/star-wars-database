@@ -23,6 +23,7 @@ function App() {
   const [swapiFilmData, setSwapiFilmData] = useState(null)
   const [swapiPlanetData, setSwapiPlanetData] = useState(null)
   const [swapiSpeciesData, setSwapiSpeciesData] = useState(null)
+  const [swapiHashSpecies, setSwapiHashSpecies] = useState({})
 
   const [filmLoading, setFilmLoading] = useState(true) // true if still fetching films
   const [peopleLoading, setPeopleLoading] = useState(true) // true if still fetching people
@@ -64,7 +65,17 @@ function App() {
           var personData = {}
           for (let i = 0; i < responses.length; i++) {
             personData[responses[i].name] = responses[i]
+            var url = responses[i]['species'][0]
+            console.log(personData[responses[i].name].name, url)
+            console.log(responses[i]['species'] in swapiHashSpecies)
+            // if (!(responses[i]['species'] in swapiHashSpecies)) {
+              // fetch(url)
+              // .then(res => res.json())
+              // .then(response => {swapiHashSpecies[url] = response.results['name']})
+            // }
+            // personData[responses[i].name][url] = swapiHashSpecies[url]
           }
+          console.log(personData)
           setSwapiPersonData(personData)
           setPeopleLoading(false)
         })
@@ -198,7 +209,14 @@ function App() {
           : (
             <div>
               <p>
-                <Text code>{selectedPerson}</Text> is a <Text code>{swapiSpeciesData[swapiPersonData[selectedPerson].species[0]].name}</Text> from the <Text code>Planet of {swapiPlanetData[swapiPersonData[selectedPerson].homeworld].name}</Text>, far, far away...
+                <Text code>{selectedPerson}</Text> is a <Text code>
+                {!swapiPersonData[selectedPerson].species || !swapiPersonData[selectedPerson].species.length 
+                  ?
+                  '???'
+                  :
+                  swapiSpeciesData[swapiPersonData[selectedPerson].species[0]].name
+                }
+                </Text> from the <Text code>Planet of {swapiPlanetData[swapiPersonData[selectedPerson].homeworld].name}</Text>, far, far away...
               </p>
               <CharacterTable character={selectedPerson} swapiPersonData={swapiPersonData} swapiFilmData={swapiFilmData}/>
             </div>
