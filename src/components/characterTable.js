@@ -24,15 +24,21 @@ const columns = [
     }
   ]
   
+  /**
+   * Gets the data for the currently selected person
+   *
+   * @param {character, swapiPersonData, swapiFilmData} props
+   * @returns the data for all of the rows of the table
+   */
   function getDataSource(props) {
     var swapiPersonData = props.swapiPersonData
     var characterObject = swapiPersonData[props.character]
-    var characterFilmsList = characterObject.films
+    var characterFilmsList = characterObject.films // the films the character was in
     var swapiFilmData = props.swapiFilmData
     var data = []
     for (let i = 0; i < characterFilmsList.length; i++) {
       var filmURL = characterFilmsList[i]
-      var filmData = swapiFilmData[filmURL]
+      var filmData = swapiFilmData[filmURL] // url is a key, see App.js
       data.push({
         key: i.toString(),
         title: filmData.title,
