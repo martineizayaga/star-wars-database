@@ -1,8 +1,3 @@
-@font-face {
-  font-family: 'Starjedi';
-  src: local('Starjedi'), url(./fonts/Starjedi.ttf) format('truetype');
-}
-
 .App {
   text-align: center;
 }
@@ -51,6 +46,13 @@ tr:nth-child(even) {
 .jedi-mode-button {
   display: block;
   position: absolute;
-  bottom: 5%;
+  top: 5%;
   right: 5%;
 }
+
+@media only screen and (max-width: 815px) {
+  .jedi-mode-button {
+    display: none
+  }
+}
+
