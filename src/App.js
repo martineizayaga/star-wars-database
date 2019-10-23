@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-import { Select, Table, Divider, Typography } from 'antd'
+import { Table, Typography, Button } from 'antd'
 import 'antd/dist/antd.css'
 import dayjs from 'dayjs'
 import StarWarsLogo from './star-wars-logo.png'
@@ -9,8 +9,7 @@ import LazyLoad from 'react-lazyload'
 import { css } from '@emotion/core'
 import './App.css';
 
-const { Option } = Select;
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const override = css`
   display: block;
@@ -31,10 +30,9 @@ function App() {
   const [speciesLoading, setSpeciesLoading] = useState(true)
   const [selectedPerson, setSelectedPerson] = useState('')
 
-  const [allLoaded, setAllLoaded] = useState(localStorage.getItem('allLoaded') || false)
+  const [jediMode, setJediMode] = useState(false)
 
   useEffect(() => {
-    console.log(1)
     var pagesRequired = 0
     fetch(
       'https://swapi.co/api/people/'
@@ -65,7 +63,6 @@ function App() {
   }, [swapiPersonData])
 
   useEffect(() => {
-    console.log(2)
     var pagesRequired = 0
     fetch(
       'https://swapi.co/api/species/'
@@ -96,7 +93,6 @@ function App() {
   }, [swapiSpeciesData])
 
   useEffect(() => {
-    console.log(3)
     var pagesRequired = 0
     fetch(
       'https://swapi.co/api/planets/'
@@ -127,7 +123,6 @@ function App() {
   }, [swapiPlanetData])
 
   useEffect(() => {
-    console.log(4)
     fetch(
       'https://swapi.co/api/films/'
     )
@@ -142,74 +137,64 @@ function App() {
     })
   }, [swapiFilmData])
 
-  function onSelect(value, event) {
-    setSelectedPerson(value)
-  }
-
   function trackChange(e) {
     const value = e.currentTarget.value
     setSelectedPerson(value)
   }
 
-  if (filmLoading || peopleLoading || speciesLoading || planetLoading) {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <LazyLoad>
-            <img
-                src={StarWarsLogo}
-                id="star-wars-logo"
-            />
-          </LazyLoad>
-          <Title>Database</Title>
-          <BarLoader
-            css={override}
-            sizeUnit={'px'}
-            size={150}
-            color={'black'}
-            className="barloader"
+  return (
+    <div className={"App " + (jediMode ? 'jedi-mode' : '')}>
+      <header className="App-header">
+        <LazyLoad>
+          <img
+            src={StarWarsLogo}
+            id="star-wars-logo"
           />
-        </header>
-    </div>
-    )
-  } else {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <LazyLoad>
-            <img
-              src={StarWarsLogo}
-              id="star-wars-logo"
+        </LazyLoad>
+        {
+          filmLoading || peopleLoading || speciesLoading || planetLoading ?
+          <div>
+            <p>Loading data...</p>
+            <BarLoader
+              css={override}
+              sizeUnit={'px'}
+              size={150}
+              color={'black'}
+              className="barloader"
             />
-          </LazyLoad>
-          <Title>Database</Title>
-
-          <input autofocus type="text" list="people" onChange={trackChange} placeholder="Pick your character"/>
-          <datalist id="people">
-            {Object.keys(swapiPersonData).map((value, index) => {
-                return (
-                  <option value={value} key={index}>{value}</option>
-                )
-            })}
-          </datalist>
-
-          {
-            Object.keys(swapiPersonData).indexOf(selectedPerson) == -1
-            ? ''
-            : (
-              <div>
-                <p>
-                  <Text code>{selectedPerson}</Text> is a <Text code>{swapiSpeciesData[swapiPersonData[selectedPerson].species[0]].name}</Text> from the <Text code>Planet of {swapiPlanetData[swapiPersonData[selectedPerson].homeworld].name}</Text>, far, far away...
-                </p>
-                <CharacterTable character={selectedPerson} swapiPersonData={swapiPersonData} swapiFilmData={swapiFilmData}/>
-              </div>
-            )
-          }
-        </header>
-      </div>
-    );
-  }
-  
+          </div> :
+          <div>
+              <input autoFocus type="text" list="people" onChange={trackChange} placeholder="Pick your character"/>
+              <datalist id="people">
+                {Object.keys(swapiPersonData).map((value, index) => {
+                    return (
+                      <option value={value} key={index}>{value}</option>
+                    )
+                })}
+              </datalist>
+            
+            {
+              Object.keys(swapiPersonData).indexOf(selectedPerson) == -1
+              ? ''
+              : (
+                <div>
+                  <p>
+                    <Text code>{selectedPerson}</Text> is a <Text code>{swapiSpeciesData[swapiPersonData[selectedPerson].species[0]].name}</Text> from the <Text code>Planet of {swapiPlanetData[swapiPersonData[selectedPerson].homeworld].name}</Text>, far, far away...
+                  </p>
+                  <CharacterTable character={selectedPerson} swapiPersonData={swapiPersonData} swapiFilmData={swapiFilmData}/>
+                </div>
+              )
+            }
+          </div>
+        }
+        <Button className="jedi-mode-button" onClick={(e) => {
+          const value = e.currentTarget.value
+          setJediMode(!jediMode)
+          console.log(jediMode)
+        }}>{jediMode ? 'Padawan Mode' : 'Jedi Mode'}</Button>
+      </header>
+    </div>
+  )
 }
 
 const columns = [

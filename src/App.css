@@ -5,7 +5,6 @@
 
 .App {
   text-align: center;
-  cursor: url('https://www.cursor.cc/cursor/219/79/cursor.png'), auto
 }
 
 .App-header {
@@ -43,4 +42,15 @@ input {
 
 tr:nth-child(even) {
   background-color: #fafafa;
+}
+
+.jedi-mode {
+  cursor: url('https://www.cursor.cc/cursor/219/79/cursor.png'), auto
+}
+
+.jedi-mode-button {
+  display: block;
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
 }
