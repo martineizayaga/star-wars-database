@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import { Typography, Button } from 'antd'
 import 'antd/dist/antd.css'
@@ -22,16 +22,12 @@ function App() {
   const swapiPersonData = useState(localStorage.getItem('swapiPersonData'))[0]
   const swapiFilmData = useState(localStorage.getItem('swapiFilmData'))[0]
 
-  const [,updateState] = useState()
-
   const [filmLoading, setFilmLoading] = useState((localStorage.getItem('filmLoading') === 'true') || true) // true if still fetching films
   const [peopleLoading, setPeopleLoading] = useState((localStorage.getItem('peopleLoading') === 'true') || true) // true if still fetching people
   
   const [selectedPerson, setSelectedPerson] = useState('') // name in input
 
   const [jediMode, setJediMode] = useState(false) // super secret easter egg shhh don't tell anyone
-
-  const [, forceUpdate] = useState(0)
 
   /**
    * Effect hook for swapi person data
