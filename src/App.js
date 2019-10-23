@@ -8,6 +8,7 @@ import LazyLoad from 'react-lazyload'
 import { css } from '@emotion/core'
 import CharacterTable from './components/characterTable'
 import './App.css';
+import { loadOptions } from '@babel/core';
 
 const { Text } = Typography;
 
@@ -19,16 +20,11 @@ const override = css`
 `
 
 function App() {
-  const [swapiPersonData, setSwapiPersonData] = useState(null)
-  const [swapiFilmData, setSwapiFilmData] = useState(null)
-  const [swapiPlanetData, setSwapiPlanetData] = useState(null)
-  const [swapiSpeciesData, setSwapiSpeciesData] = useState(null)
-  const [swapiHashSpecies, setSwapiHashSpecies] = useState({})
+  const [swapiPersonData, setSwapiPersonData] = useState(localStorage.getItem('swapiPersonData') || '')
+  const [swapiFilmData, setSwapiFilmData] = useState(localStorage.getItem('swapiFilmData' || ''))
 
-  const [filmLoading, setFilmLoading] = useState(true) // true if still fetching films
-  const [peopleLoading, setPeopleLoading] = useState(true) // true if still fetching people
-  const [planetLoading, setPlanetLoading] = useState(true) // true if still fetching planets
-  const [speciesLoading, setSpeciesLoading] = useState(true) // true if still fetching species
+  const [filmLoading, setFilmLoading] = useState((localStorage.getItem('filmLoading') === 'true') || true) // true if still fetching films
+  const [peopleLoading, setPeopleLoading] = useState((localStorage.getItem('peopleLoading') === 'true') || true) // true if still fetching people
   
   const [selectedPerson, setSelectedPerson] = useState('') // name in input
 
@@ -65,101 +61,14 @@ function App() {
           var personData = {}
           for (let i = 0; i < responses.length; i++) {
             personData[responses[i].name] = responses[i]
-            var url = responses[i]['species'][0]
-            console.log(personData[responses[i].name].name, url)
-            console.log(responses[i]['species'] in swapiHashSpecies)
-            // if (!(responses[i]['species'] in swapiHashSpecies)) {
-              // fetch(url)
-              // .then(res => res.json())
-              // .then(response => {swapiHashSpecies[url] = response.results['name']})
-            // }
-            // personData[responses[i].name][url] = swapiHashSpecies[url]
           }
-          console.log(personData)
-          setSwapiPersonData(personData)
+          localStorage.setItem('swapiPersonData', JSON.stringify(personData))
+          localStorage.setItem('peopleLoading', false)
           setPeopleLoading(false)
         })
       })
     })
   }, [swapiPersonData])
-
-  /** 
-   * Effect hook for species data
-   * Sets swapi specied data to have this schema:
-   * {
-   *  "https:...1": {info...},
-   *  "https:...2": {info...},
-   *  ...
-   * }
-   */
-  useEffect(() => {
-    var pagesRequired = 0
-    fetch(
-      'https://swapi.co/api/species/'
-    )
-    .then(res => res.json())
-    .then(response =>{
-      const apiPromises = []
-      pagesRequired = Math.ceil(response.count / 10)
-      for (let i = 1; i <= pagesRequired; i++) {
-        apiPromises.push(fetch('https://swapi.co/api/species/?page='+i))
-      }
-
-      Promise.all(apiPromises)
-      .then(responses => {
-        responses = responses.map(response => response.json())
-        Promise.all(responses)
-        .then(responses => {
-          responses = responses.map(response => response.results).flat()
-          var speciesData = {}
-          for (let i = 0; i < responses.length; i++) {
-            speciesData[responses[i].url] = responses[i]
-          }
-          setSwapiSpeciesData(speciesData)
-          setSpeciesLoading(false)
-        })
-      })
-    })
-  }, [swapiSpeciesData])
-
-  /**
-   * Effect hook for planet data
-   * Sets swapi planet data to have this schema:
-   * {
-   *  "https://...1": {info...},
-   *  "https://...2": {info...},
-   *  ...
-   * }
-   */
-  useEffect(() => {
-    var pagesRequired = 0
-    fetch(
-      'https://swapi.co/api/planets/'
-    )
-    .then(res => res.json())
-    .then(response =>{
-      const apiPromises = []
-      pagesRequired = Math.ceil(response.count / 10)
-      for (let i = 1; i <= pagesRequired; i++) {
-        apiPromises.push(fetch('https://swapi.co/api/planets/?page='+i))
-      }
-
-      Promise.all(apiPromises)
-      .then(responses => {
-        responses = responses.map(response => response.json())
-        Promise.all(responses)
-        .then(responses => {
-          responses = responses.map(response => response.results).flat()
-          var planetData = {}
-          for (let i = 0; i < responses.length; i++) {
-            planetData[responses[i].url] = responses[i]
-          }
-          setSwapiPlanetData(planetData)
-          setPlanetLoading(false)
-        })
-      })
-    })
-  }, [swapiPlanetData])
 
   /**
    * Effect hook for film data
@@ -180,7 +89,8 @@ function App() {
       for (let i = 0; i < response.results.length; i++) {
         filmData[response.results[i].url] = response.results[i]
       }
-      setSwapiFilmData(filmData)
+      localStorage.setItem('swapiFilmData', JSON.stringify(filmData))
+      localStorage.setItem('filmLoading', false)
       setFilmLoading(false)
     })
   }, [swapiFilmData])
@@ -191,12 +101,15 @@ function App() {
   }
 
   function returnDropdown() {
+    console.log(swapiFilmData, swapiPersonData)
+    var swapiPersonDataJSON = JSON.parse(swapiPersonData)
+    var swapiFilmDataJSON = JSON.parse(swapiFilmData)
     return (
       <div>
         {/* Inspired by https://codepen.io/BTM/pen/ZKxKPo?editors=1111 */}
         <input autoFocus type="text" list="people" onChange={trackChange} placeholder="Pick your character"/>
         <datalist id="people">
-          {Object.keys(swapiPersonData).map((value, index) => {
+          {Object.keys(swapiPersonDataJSON).map((value, index) => {
               return (
                 <option value={value} key={index}>{value}</option>
               )
@@ -204,21 +117,23 @@ function App() {
         </datalist>
         {
           // if the typed input can't be found in the valid list of names
-          Object.keys(swapiPersonData).indexOf(selectedPerson) === -1
+          Object.keys(swapiPersonDataJSON).indexOf(selectedPerson) === -1
           ? ''
           : (
             <div>
               <p>
-                <Text code>{selectedPerson}</Text> is a <Text code>
-                {!swapiPersonData[selectedPerson].species || !swapiPersonData[selectedPerson].species.length 
-                  ?
-                  '???'
-                  :
-                  swapiSpeciesData[swapiPersonData[selectedPerson].species[0]].name
-                }
-                </Text> from the <Text code>Planet of {swapiPlanetData[swapiPersonData[selectedPerson].homeworld].name}</Text>, far, far away...
+                Did you know? <Text code>{selectedPerson}</Text> has been in <Text code>{swapiPersonDataJSON[selectedPerson].films.length} films</Text>{(() => {
+                  console.log(swapiPersonDataJSON)
+                  if (!isNaN(swapiPersonDataJSON[selectedPerson]['height'])) {
+                    return (<span> and is <Text code>{swapiPersonDataJSON[selectedPerson].height / 100} meters tall.</Text></span>)
+                  } else if (!isNaN(swapiPersonDataJSON[selectedPerson].mass)) {
+                    return (<span> and weighs <Text code>swapiPersonDataJSON[selectedPerson].mass</Text> lbs.</span>)
+                  } else {
+                    return '.'
+                  }
+                })()}
               </p>
-              <CharacterTable character={selectedPerson} swapiPersonData={swapiPersonData} swapiFilmData={swapiFilmData}/>
+              <CharacterTable character={selectedPerson} swapiPersonData={swapiPersonDataJSON} swapiFilmData={swapiFilmDataJSON}/>
             </div>
           )
         }
@@ -227,10 +142,25 @@ function App() {
   }
 
   function returnBody() {
-    if (filmLoading || peopleLoading || speciesLoading || planetLoading) {
+    console.log('whatup', filmLoading, peopleLoading)
+      if(filmLoading || peopleLoading) {
       return (
         <div>
-          <p>Loading data...</p>
+          <p>
+            {
+              (() => {
+                if (filmLoading && peopleLoading) {
+                  return 'Traveling through hyperspace...'
+                } else if (filmLoading) {
+                  return 'Firing up lightsabers...'
+                } else if (peopleLoading) {
+                  return 'Charging up the blasters...'
+                } else {
+                  return 'Loading...'
+                }
+              })()
+            }
+          </p>
           <BarLoader
             css={override}
             sizeUnit={'px'}
