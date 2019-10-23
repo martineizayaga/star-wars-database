@@ -46,8 +46,8 @@ tr:nth-child(even) {
 .jedi-mode-button {
   display: block;
   position: absolute;
-  top: 5%;
-  right: 5%;
+  top: 2%;
+  right: 2%;
 }
 
 @media only screen and (max-width: 815px) {
