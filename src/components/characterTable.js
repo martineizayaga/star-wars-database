@@ -52,7 +52,6 @@ const columns = [
   function CharacterTable(props) {
     return (
         <Table
-            title={() => (props.character + " was in these Movies")}
             columns={columns}
             dataSource={getDataSource(props)}
             pagination={false}
