@@ -108,6 +108,15 @@ function App() {
     setSelectedPerson(value)
   }
 
+  function onFormSubmit(e) {
+    console.log('trackchange', e)
+  }
+
+  function trackChange(e) {
+    const value = e.currentTarget.value
+    setSelectedPerson(value)
+  }
+
   if (filmLoading || peopleLoading || planetLoading) {
   // if (true) {
     return (
@@ -132,7 +141,20 @@ function App() {
             id="star-wars-logo"
           />
           <Title className="title">Database</Title>
-          <Select
+
+          <input type="text" list="people" onChange={trackChange}/>
+          <datalist id="people" onChange={onFormSubmit}>
+            {Object.keys(swapiPersonData).map((value, index) => {
+                return (
+                  <option value={value} key={index}>{value}</option>
+                )
+            })}
+          </datalist>
+
+
+
+
+          {/* <Select
             showSearch
             style={{ width: '60%', maxWidth: '600px' }}
             onSelect={onSelect}
@@ -147,9 +169,9 @@ function App() {
                 </Option>
               )
             })}
-          </Select>
+          </Select> */}
           {
-            selectedPerson === ''
+            Object.keys(swapiPersonData).indexOf(selectedPerson) == -1
             ? ''
             : (
               <div>
