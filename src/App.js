@@ -24,14 +24,24 @@ function App() {
   const [swapiPlanetData, setSwapiPlanetData] = useState(null)
   const [swapiSpeciesData, setSwapiSpeciesData] = useState(null)
 
-  const [filmLoading, setFilmLoading] = useState(true)
-  const [peopleLoading, setPeopleLoading] = useState(true)
-  const [planetLoading, setPlanetLoading] = useState(true)
-  const [speciesLoading, setSpeciesLoading] = useState(true)
-  const [selectedPerson, setSelectedPerson] = useState('')
+  const [filmLoading, setFilmLoading] = useState(true) // true if still fetching films
+  const [peopleLoading, setPeopleLoading] = useState(true) // true if still fetching people
+  const [planetLoading, setPlanetLoading] = useState(true) // true if still fetching planets
+  const [speciesLoading, setSpeciesLoading] = useState(true) // true if still fetching species
+  
+  const [selectedPerson, setSelectedPerson] = useState('') // name in input
 
-  const [jediMode, setJediMode] = useState(false)
+  const [jediMode, setJediMode] = useState(false) // super secret easter egg shhh don't tell anyone
 
+  /**
+   * Effect hook for swapi person data
+   * Sets swapi person data to have this schema:
+   * {
+   *  "name1": {info...},
+   *  "name2": {info...},
+   *  ...
+   * }
+   */
   useEffect(() => {
     var pagesRequired = 0
     fetch(
@@ -62,6 +72,15 @@ function App() {
     })
   }, [swapiPersonData])
 
+  /** 
+   * Effect hook for species data
+   * Sets swapi specied data to have this schema:
+   * {
+   *  "https:...1": {info...},
+   *  "https:...2": {info...},
+   *  ...
+   * }
+   */
   useEffect(() => {
     var pagesRequired = 0
     fetch(
@@ -92,6 +111,15 @@ function App() {
     })
   }, [swapiSpeciesData])
 
+  /**
+   * Effect hook for planet data
+   * Sets swapi planet data to have this schema:
+   * {
+   *  "https://...1": {info...},
+   *  "https://...2": {info...},
+   *  ...
+   * }
+   */
   useEffect(() => {
     var pagesRequired = 0
     fetch(
@@ -122,6 +150,15 @@ function App() {
     })
   }, [swapiPlanetData])
 
+  /**
+   * Effect hook for film data
+   * Sets swapi film data to have this schema:
+   * {
+   *  "https://...1": {info...},
+   *  "https://...2": {info...},
+   *  ...
+   * }
+   */
   useEffect(() => {
     fetch(
       'https://swapi.co/api/films/'
@@ -142,58 +179,73 @@ function App() {
     setSelectedPerson(value)
   }
 
-  return (
-    <div className={"App " + (jediMode ? 'jedi-mode' : '')}>
-      <header className="App-header">
-        <LazyLoad>
-          <img
-            src={StarWarsLogo}
-            id="star-wars-logo"
-          />
-        </LazyLoad>
-        {
-          filmLoading || peopleLoading || speciesLoading || planetLoading ?
-          <div>
-            <p>Loading data...</p>
-            <BarLoader
-              css={override}
-              sizeUnit={'px'}
-              size={150}
-              color={'black'}
-              className="barloader"
-            />
-          </div> :
-          <div>
-              <input autoFocus type="text" list="people" onChange={trackChange} placeholder="Pick your character"/>
-              <datalist id="people">
-                {Object.keys(swapiPersonData).map((value, index) => {
-                    return (
-                      <option value={value} key={index}>{value}</option>
-                    )
-                })}
-              </datalist>
-            
-            {
-              Object.keys(swapiPersonData).indexOf(selectedPerson) == -1
-              ? ''
-              : (
-                <div>
-                  <p>
-                    <Text code>{selectedPerson}</Text> is a <Text code>{swapiSpeciesData[swapiPersonData[selectedPerson].species[0]].name}</Text> from the <Text code>Planet of {swapiPlanetData[swapiPersonData[selectedPerson].homeworld].name}</Text>, far, far away...
-                  </p>
-                  <CharacterTable character={selectedPerson} swapiPersonData={swapiPersonData} swapiFilmData={swapiFilmData}/>
-                </div>
+  function returnDropdown() {
+    return (
+      <div>
+        <input autoFocus type="text" list="people" onChange={trackChange} placeholder="Pick your character"/>
+        <datalist id="people">
+          {Object.keys(swapiPersonData).map((value, index) => {
+              return (
+                <option value={value} key={index}>{value}</option>
               )
-            }
-          </div>
+          })}
+        </datalist>
+        {
+          // if the typed input can't be found in the valid list of names
+          Object.keys(swapiPersonData).indexOf(selectedPerson) === -1
+          ? ''
+          : (
+            <div>
+              <p>
+                <Text code>{selectedPerson}</Text> is a <Text code>{swapiSpeciesData[swapiPersonData[selectedPerson].species[0]].name}</Text> from the <Text code>Planet of {swapiPlanetData[swapiPersonData[selectedPerson].homeworld].name}</Text>, far, far away...
+              </p>
+              <CharacterTable character={selectedPerson} swapiPersonData={swapiPersonData} swapiFilmData={swapiFilmData}/>
+            </div>
+          )
         }
-        <Button className="jedi-mode-button" onClick={(e) => {
-          const value = e.currentTarget.value
-          setJediMode(!jediMode)
-          console.log(jediMode)
-        }}>{jediMode ? 'Padawan Mode' : 'Jedi Mode'}</Button>
-      </header>
-    </div>
-  )
+      </div>
+    )
+  }
+
+  function returnBody() {
+    if (filmLoading || peopleLoading || speciesLoading || planetLoading) {
+      return (
+        <div>
+          <p>Loading data...</p>
+          <BarLoader
+            css={override}
+            sizeUnit={'px'}
+            size={150}
+            color={'black'}
+            className="barloader"
+          />
+        </div>
+      )
+    } else {
+      return returnDropdown()
+    }
+  }
+
+  function returnAppTemplate() {
+    return (
+      <div className={"App " + (jediMode ? 'jedi-mode' : '')}>
+        <header className="App-header">
+          <LazyLoad>
+            <img
+              src={StarWarsLogo}
+              id="star-wars-logo"
+              alt="Star Wars Logo"
+            />
+          </LazyLoad>
+          {returnBody()}
+          <Button className="jedi-mode-button" onClick={(e) => setJediMode(!jediMode)}>
+            {jediMode ? 'Padawan Mode' : 'Jedi Mode'}
+          </Button>
+        </header>
+      </div>
+    )
+  }
+
+  return returnAppTemplate()
 }
 export default App;
