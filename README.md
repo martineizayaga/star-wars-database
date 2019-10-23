@@ -1,3 +1,4 @@
+![Star Wars Logo](https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Star_Wars_Logo.svg/694px-Star_Wars_Logo.svg.png)
 # STAR WARS swapi Challenge
 A web application that lets you search for your favorite Star Wars characters' info using swapi.co.
 
