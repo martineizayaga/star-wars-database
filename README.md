@@ -44,6 +44,12 @@ Click on the image below to go to the website! 👇
 
     I initially was just using the [Ant Design UI library](https://ant.design/). Once I got a minimum viable product I wanted to see if I could get the dropdown functionality with just basic HTML, CSS, and JS. I found that you can use an input text tag and a datalist tag to make that happen. [This Codepen](https://codepen.io/BTM/pen/ZKxKPo?editors=1111) was very helpful.
     
-    I also made a paper prototype below, but later decided that displaying "No results found" would not be relevant. The table would already disappear, so the user would know that the input is invalid.
-    
-    ![Paper Prototype](https://i.ibb.co/C0MJgzN/IMG-3586-1.jpg)
+   I've made some design Sketches below
+## 🎨 Design Sketches
+![Paper Prototype](https://i.ibb.co/C0MJgzN/IMG-3586-1.jpg)
+
+<object data="https://drive.google.com/file/d/1pyfsbH1TwPsNPndlKALQyxublc2O3tL4/view?usp=sharing" type="application/pdf" width="700px" height="700px">
+    <embed src="https://drive.google.com/file/d/1pyfsbH1TwPsNPndlKALQyxublc2O3tL4/view?usp=sharing">
+        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="https://drive.google.com/file/d/1pyfsbH1TwPsNPndlKALQyxublc2O3tL4/view?usp=sharing">Download PDF</a>.</p>
+    </embed>
+</object>
