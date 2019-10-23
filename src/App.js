@@ -1,35 +1,40 @@
 import React, {useEffect, useState} from 'react';
-import './App.css';
+
 import { Select, Table, Divider, Typography } from 'antd'
 import 'antd/dist/antd.css'
 import dayjs from 'dayjs'
 import StarWarsLogo from './star-wars-logo.png'
 import BarLoader from 'react-spinners/BarLoader'
+import LazyLoad from 'react-lazyload'
 import { css } from '@emotion/core'
+import './App.css';
 
 const { Option } = Select;
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const override = css`
   display: block;
   margin: 0 auto;
   border-color: red;
-  position: absolute;
-  top: 10%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  margin-top: 20px;
 `
 
 function App() {
-  const [swapiPersonData, setSwapiPersonData] = useState(JSON.parse(localStorage.getItem('swapiPersonData')) || {})
-  const [swapiFilmData, setSwapiFilmData] = useState(JSON.parse(localStorage.getItem('swapiFilmData')) || {})
-  const [swapiPlanetData, setSwapiPlanetData] = useState(JSON.parse(localStorage.getItem('swapiPlanetData')) || {})
+  const [swapiPersonData, setSwapiPersonData] = useState(null)
+  const [swapiFilmData, setSwapiFilmData] = useState(null)
+  const [swapiPlanetData, setSwapiPlanetData] = useState(null)
+  const [swapiSpeciesData, setSwapiSpeciesData] = useState(null)
+
   const [filmLoading, setFilmLoading] = useState(true)
   const [peopleLoading, setPeopleLoading] = useState(true)
   const [planetLoading, setPlanetLoading] = useState(true)
+  const [speciesLoading, setSpeciesLoading] = useState(true)
   const [selectedPerson, setSelectedPerson] = useState('')
 
+  const [allLoaded, setAllLoaded] = useState(localStorage.getItem('allLoaded') || false)
+
   useEffect(() => {
+    console.log(1)
     var pagesRequired = 0
     fetch(
       'https://swapi.co/api/people/'
@@ -52,7 +57,7 @@ function App() {
           for (let i = 0; i < responses.length; i++) {
             personData[responses[i].name] = responses[i]
           }
-          localStorage.setItem('swapiPersonData', JSON.stringify(personData))
+          setSwapiPersonData(personData)
           setPeopleLoading(false)
         })
       })
@@ -60,6 +65,38 @@ function App() {
   }, [swapiPersonData])
 
   useEffect(() => {
+    console.log(2)
+    var pagesRequired = 0
+    fetch(
+      'https://swapi.co/api/species/'
+    )
+    .then(res => res.json())
+    .then(response =>{
+      const apiPromises = []
+      pagesRequired = Math.ceil(response.count / 10)
+      for (let i = 1; i <= pagesRequired; i++) {
+        apiPromises.push(fetch('https://swapi.co/api/species/?page='+i))
+      }
+
+      Promise.all(apiPromises)
+      .then(responses => {
+        responses = responses.map(response => response.json())
+        Promise.all(responses)
+        .then(responses => {
+          responses = responses.map(response => response.results).flat()
+          var speciesData = {}
+          for (let i = 0; i < responses.length; i++) {
+            speciesData[responses[i].url] = responses[i]
+          }
+          setSwapiSpeciesData(speciesData)
+          setSpeciesLoading(false)
+        })
+      })
+    })
+  }, [swapiSpeciesData])
+
+  useEffect(() => {
+    console.log(3)
     var pagesRequired = 0
     fetch(
       'https://swapi.co/api/planets/'
@@ -82,7 +119,7 @@ function App() {
           for (let i = 0; i < responses.length; i++) {
             planetData[responses[i].url] = responses[i]
           }
-          localStorage.setItem('swapiPlanetData', JSON.stringify(planetData))
+          setSwapiPlanetData(planetData)
           setPlanetLoading(false)
         })
       })
@@ -90,6 +127,7 @@ function App() {
   }, [swapiPlanetData])
 
   useEffect(() => {
+    console.log(4)
     fetch(
       'https://swapi.co/api/films/'
     )
@@ -99,7 +137,7 @@ function App() {
       for (let i = 0; i < response.results.length; i++) {
         filmData[response.results[i].url] = response.results[i]
       }
-      localStorage.setItem('swapiFilmData', JSON.stringify(filmData))
+      setSwapiFilmData(filmData)
       setFilmLoading(false)
     })
   }, [swapiFilmData])
@@ -108,20 +146,22 @@ function App() {
     setSelectedPerson(value)
   }
 
-  function onFormSubmit(e) {
-    console.log('trackchange', e)
-  }
-
   function trackChange(e) {
     const value = e.currentTarget.value
     setSelectedPerson(value)
   }
 
-  if (filmLoading || peopleLoading || planetLoading) {
-  // if (true) {
+  if (filmLoading || peopleLoading || speciesLoading || planetLoading) {
     return (
       <div className="App">
         <header className="App-header">
+          <LazyLoad>
+            <img
+                src={StarWarsLogo}
+                id="star-wars-logo"
+            />
+          </LazyLoad>
+          <Title>Database</Title>
           <BarLoader
             css={override}
             sizeUnit={'px'}
@@ -136,14 +176,16 @@ function App() {
     return (
       <div className="App">
         <header className="App-header">
-          <img
-            src={StarWarsLogo}
-            id="star-wars-logo"
-          />
-          <Title className="title">Database</Title>
+          <LazyLoad>
+            <img
+              src={StarWarsLogo}
+              id="star-wars-logo"
+            />
+          </LazyLoad>
+          <Title>Database</Title>
 
-          <input type="text" list="people" onChange={trackChange}/>
-          <datalist id="people" onChange={onFormSubmit}>
+          <input type="text" list="people" onChange={trackChange} placeholder="Pick your character"/>
+          <datalist id="people">
             {Object.keys(swapiPersonData).map((value, index) => {
                 return (
                   <option value={value} key={index}>{value}</option>
@@ -151,34 +193,15 @@ function App() {
             })}
           </datalist>
 
-
-
-
-          {/* <Select
-            showSearch
-            style={{ width: '60%', maxWidth: '600px' }}
-            onSelect={onSelect}
-            placeholder="May the search be with you..."
-          >
-            {Object.keys(swapiPersonData).map((value, index) => {
-              return (
-                <Option
-                  key={index}
-                  value={value}>
-                  {value}
-                </Option>
-              )
-            })}
-          </Select> */}
           {
             Object.keys(swapiPersonData).indexOf(selectedPerson) == -1
             ? ''
             : (
               <div>
-                <span>
-                  {selectedPerson} was born a long time ago in a galaxy far, far away on the year {swapiPersonData[selectedPerson].birth_year} in the Planet {swapiPlanetData[swapiPersonData[selectedPerson].homeworld].name}
-                </span>
-                <CharacterTable character={selectedPerson}/>
+                <p>
+                  <Text code>{selectedPerson}</Text> is a <Text code>{swapiSpeciesData[swapiPersonData[selectedPerson].species[0]].name}</Text> from the <Text code>Planet of {swapiPlanetData[swapiPersonData[selectedPerson].homeworld].name}</Text>, far, far away...
+                </p>
+                <CharacterTable character={selectedPerson} swapiPersonData={swapiPersonData} swapiFilmData={swapiFilmData}/>
               </div>
             )
           }
@@ -211,10 +234,11 @@ const columns = [
   }
 ]
 
-function getDataSource(character) {
-  var characterObject = JSON.parse(localStorage.getItem('swapiPersonData'))[character]
+function getDataSource(props) {
+  var swapiPersonData = props.swapiPersonData
+  var characterObject = swapiPersonData[props.character]
   var characterFilmsList = characterObject.films
-  var swapiFilmData = JSON.parse(localStorage.getItem('swapiFilmData'))
+  var swapiFilmData = props.swapiFilmData
   var data = []
   for (let i = 0; i < characterFilmsList.length; i++) {
     var filmURL = characterFilmsList[i]
@@ -232,11 +256,18 @@ function getDataSource(character) {
 function CharacterTable(props) {
   return (
     <Table
-      title={() => (props.character + "'s Movies")}
+      title={() => (props.character + " was in these Movies")}
       columns={columns}
-      dataSource={getDataSource(props.character)}
+      dataSource={getDataSource(props)}
       pagination={false}
       tableLayout={'auto'}
+      style={{
+        maxWidth: '750px',
+        marginTop: 0,
+        marginbottom: 0,
+        marginLeft: 'auto',
+        marginRight: 'auto'
+      }}
     />
   )
 }

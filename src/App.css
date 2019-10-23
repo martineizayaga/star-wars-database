@@ -5,6 +5,7 @@
 
 .App {
   text-align: center;
+  cursor: url('./cursors/cursor.cur')
 }
 
 .App-header {
@@ -27,4 +28,19 @@
 #star-wars-logo {
   width: 60%;
   max-width: 600px;
+}
+
+p {
+  font-size: inherit;
+  margin-top: 0.7em;
+  font-size: 0.7em;
+  margin-bottom: 0em;
+}
+
+input {
+  font-size: 0.7em;
+}
+
+tr:nth-child(even) {
+  background-color: #fafafa;
 }
