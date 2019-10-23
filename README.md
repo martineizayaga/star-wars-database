@@ -30,7 +30,7 @@ Click on the image below to go to the website! 👇
     I pass the chosen character name, person data, and film data.
 - [x] Character description should be a combination of your own words plus the Character’s data
 
-   I included planet data so that people could know where the character is from and put it into my own words.
+   I included the height or weight of the character and the number of films they were in.
 - [x] Style the movie list to look like a table. Even and Odd rows should have their own style.
 
     Check. I chose to use a Table API, but I still had to code in the even-odd CSS rule.
