@@ -32,6 +32,15 @@ function App() {
 
   const [jediMode, setJediMode] = useState(false)
 
+  /**
+   * Effect hook for swapi person data
+   * Sets swapi person data to have this schema:
+   * {
+   *  "name1": {info...},
+   *  "name2": {info...},
+   *  ...
+   * }
+   */
   useEffect(() => {
     var pagesRequired = 0
     fetch(
@@ -62,6 +71,15 @@ function App() {
     })
   }, [swapiPersonData])
 
+  /** 
+   * Effect hook for species data
+   * Sets swapi specied data to have this schema:
+   * {
+   *  "https:...1": {info...},
+   *  "https:...2": {info...},
+   *  ...
+   * }
+   */
   useEffect(() => {
     var pagesRequired = 0
     fetch(
@@ -92,6 +110,15 @@ function App() {
     })
   }, [swapiSpeciesData])
 
+  /**
+   * Effect hook for planet data
+   * Sets swapi planet data to have this schema:
+   * {
+   *  "https://...1": {info...},
+   *  "https://...2": {info...},
+   *  ...
+   * }
+   */
   useEffect(() => {
     var pagesRequired = 0
     fetch(
@@ -122,6 +149,15 @@ function App() {
     })
   }, [swapiPlanetData])
 
+  /**
+   * Effect hook for film data
+   * Sets swapi film data to have this schema:
+   * {
+   *  "https://...1": {info...},
+   *  "https://...2": {info...},
+   *  ...
+   * }
+   */
   useEffect(() => {
     fetch(
       'https://swapi.co/api/films/'
