@@ -153,13 +153,16 @@ function App() {
         </LazyLoad>
         {
           filmLoading || peopleLoading || speciesLoading || planetLoading ?
-          <BarLoader
-            css={override}
-            sizeUnit={'px'}
-            size={150}
-            color={'black'}
-            className="barloader"
-          /> :
+          <div>
+            <p>Loading data...</p>
+            <BarLoader
+              css={override}
+              sizeUnit={'px'}
+              size={150}
+              color={'black'}
+              className="barloader"
+            />
+          </div> :
           <div>
               <input autoFocus type="text" list="people" onChange={trackChange} placeholder="Pick your character"/>
               <datalist id="people">
