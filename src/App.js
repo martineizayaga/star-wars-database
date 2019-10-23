@@ -8,7 +8,6 @@ import LazyLoad from 'react-lazyload'
 import { css } from '@emotion/core'
 import CharacterTable from './components/characterTable'
 import './App.css';
-import { loadOptions } from '@babel/core';
 
 const { Text } = Typography;
 
@@ -20,8 +19,8 @@ const override = css`
 `
 
 function App() {
-  const [swapiPersonData, setSwapiPersonData] = useState(localStorage.getItem('swapiPersonData') || '')
-  const [swapiFilmData, setSwapiFilmData] = useState(localStorage.getItem('swapiFilmData' || ''))
+  const swapiPersonData = useState(localStorage.getItem('swapiPersonData') || '')[0]
+  const swapiFilmData = useState(localStorage.getItem('swapiFilmData' || ''))[0]
 
   const [filmLoading, setFilmLoading] = useState((localStorage.getItem('filmLoading') === 'true') || true) // true if still fetching films
   const [peopleLoading, setPeopleLoading] = useState((localStorage.getItem('peopleLoading') === 'true') || true) // true if still fetching people
@@ -101,12 +100,10 @@ function App() {
   }
 
   function returnDropdown() {
-    console.log(swapiFilmData, swapiPersonData)
     var swapiPersonDataJSON = JSON.parse(swapiPersonData)
     var swapiFilmDataJSON = JSON.parse(swapiFilmData)
     return (
       <div>
-        {/* Inspired by https://codepen.io/BTM/pen/ZKxKPo?editors=1111 */}
         <input autoFocus type="text" list="people" onChange={trackChange} placeholder="Pick your character"/>
         <datalist id="people">
           {Object.keys(swapiPersonDataJSON).map((value, index) => {
@@ -123,9 +120,8 @@ function App() {
             <div>
               <p>
                 Did you know? <Text code>{selectedPerson}</Text> has been in <Text code>{swapiPersonDataJSON[selectedPerson].films.length} films</Text>{(() => {
-                  console.log(swapiPersonDataJSON)
                   if (!isNaN(swapiPersonDataJSON[selectedPerson]['height'])) {
-                    return (<span> and is <Text code>{swapiPersonDataJSON[selectedPerson].height / 100} meters tall.</Text></span>)
+                    return (<span> and is <Text code>{swapiPersonDataJSON[selectedPerson].height / 100} meters tall</Text>.</span>)
                   } else if (!isNaN(swapiPersonDataJSON[selectedPerson].mass)) {
                     return (<span> and weighs <Text code>swapiPersonDataJSON[selectedPerson].mass</Text> lbs.</span>)
                   } else {
@@ -142,7 +138,6 @@ function App() {
   }
 
   function returnBody() {
-    console.log('whatup', filmLoading, peopleLoading)
       if(filmLoading || peopleLoading) {
       return (
         <div>
