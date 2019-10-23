@@ -18,7 +18,7 @@ You will also see any lint errors in the console.
 ## 🎁 Demo
 ![Demo](https://media.giphy.com/media/SYpGmAZYXcSAcchCzx/giphy.gif)
 
-It's also live on a [website](https://star-wars-directory-challenge.netlify.com/)!
+It's also live on a [<img src="https://i.ibb.co/JcFQ44y/Screen-Shot-2019-10-23-at-9-45-21-AM.png">](https://star-wars-directory-challenge.netlify.com/)!
 
 ## 📝 Specification
 - [x] At least two (2) web components.
