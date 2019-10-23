@@ -48,8 +48,5 @@ Click on the image below to go to the website! 👇
 ## 🎨 Design Sketches
 ![Paper Prototype](https://i.ibb.co/C0MJgzN/IMG-3586-1.jpg)
 
-<object data="https://drive.google.com/file/d/1pyfsbH1TwPsNPndlKALQyxublc2O3tL4/view?usp=sharing" type="application/pdf" width="700px" height="700px">
-    <embed src="https://drive.google.com/file/d/1pyfsbH1TwPsNPndlKALQyxublc2O3tL4/view?usp=sharing">
-        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="https://drive.google.com/file/d/1pyfsbH1TwPsNPndlKALQyxublc2O3tL4/view?usp=sharing">Download PDF</a>.</p>
-    </embed>
-</object>
+Click below for a PDF of the process👇
+![<img src="https://i.ibb.co/XsDNLq4/Screen-Shot-2019-10-23-at-4-54-28-PM.png">](https://drive.google.com/file/d/1pyfsbH1TwPsNPndlKALQyxublc2O3tL4/view?usp=sharing)]
