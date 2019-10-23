@@ -15,7 +15,7 @@ The page will reload when you make edits.<br />
 You will also see any lint errors in the console.
 
 ## 🎁 Demo
-[Demo](https://media.giphy.com/media/SYpGmAZYXcSAcchCzx/giphy.gif)
+![Demo](https://media.giphy.com/media/SYpGmAZYXcSAcchCzx/giphy.gif)
 
 It's also live on a [website](https://star-wars-directory-challenge.netlify.com/)!
 
@@ -41,5 +41,7 @@ It's also live on a [website](https://star-wars-directory-challenge.netlify.com/
 - [x] Use iteration whenever is possible.
 
     I initially was just using the [Ant Design UI library](https://ant.design/). Once I got a minimum viable product I wanted to see if I could get the dropdown functionality with just basic HTML, CSS, and JS. I found that you can use an input text tag and a datalist tag to make that happen. [This Codepen](https://codepen.io/BTM/pen/ZKxKPo?editors=1111) was very helpful.
- 
- 
+    
+    I also made a paper prototype below, but later decided that displaying "No results found" would not be relevant. The table would already disappear, so the user would know that the input is invalid.
+    
+    ![Paper Prototype](https://i.ibb.co/C0MJgzN/IMG-3586-1.jpg)
