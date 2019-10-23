@@ -151,65 +151,51 @@ function App() {
     setSelectedPerson(value)
   }
 
-  if (filmLoading || peopleLoading || speciesLoading || planetLoading) {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <LazyLoad>
-            <img
-                src={StarWarsLogo}
-                id="star-wars-logo"
-            />
-          </LazyLoad>
-          <Title>Database</Title>
+  return (
+    <div className="App">
+      <header className="App-header">
+        <LazyLoad>
+          <img
+            src={StarWarsLogo}
+            id="star-wars-logo"
+          />
+        </LazyLoad>
+        {
+          filmLoading || peopleLoading || speciesLoading || planetLoading ?
           <BarLoader
             css={override}
             sizeUnit={'px'}
             size={150}
             color={'black'}
             className="barloader"
-          />
-        </header>
+          /> :
+          <div>
+              <input autofocus type="text" list="people" onChange={trackChange} placeholder="Pick your character"/>
+              <datalist id="people">
+                {Object.keys(swapiPersonData).map((value, index) => {
+                    return (
+                      <option value={value} key={index}>{value}</option>
+                    )
+                })}
+              </datalist>
+            
+            {
+              Object.keys(swapiPersonData).indexOf(selectedPerson) == -1
+              ? ''
+              : (
+                <div>
+                  <p>
+                    <Text code>{selectedPerson}</Text> is a <Text code>{swapiSpeciesData[swapiPersonData[selectedPerson].species[0]].name}</Text> from the <Text code>Planet of {swapiPlanetData[swapiPersonData[selectedPerson].homeworld].name}</Text>, far, far away...
+                  </p>
+                  <CharacterTable character={selectedPerson} swapiPersonData={swapiPersonData} swapiFilmData={swapiFilmData}/>
+                </div>
+              )
+            }
+          </div>
+        }
+      </header>
     </div>
-    )
-  } else {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <LazyLoad>
-            <img
-              src={StarWarsLogo}
-              id="star-wars-logo"
-            />
-          </LazyLoad>
-          <Title>Database</Title>
-
-          <input autofocus type="text" list="people" onChange={trackChange} placeholder="Pick your character"/>
-          <datalist id="people">
-            {Object.keys(swapiPersonData).map((value, index) => {
-                return (
-                  <option value={value} key={index}>{value}</option>
-                )
-            })}
-          </datalist>
-
-          {
-            Object.keys(swapiPersonData).indexOf(selectedPerson) == -1
-            ? ''
-            : (
-              <div>
-                <p>
-                  <Text code>{selectedPerson}</Text> is a <Text code>{swapiSpeciesData[swapiPersonData[selectedPerson].species[0]].name}</Text> from the <Text code>Planet of {swapiPlanetData[swapiPersonData[selectedPerson].homeworld].name}</Text>, far, far away...
-                </p>
-                <CharacterTable character={selectedPerson} swapiPersonData={swapiPersonData} swapiFilmData={swapiFilmData}/>
-              </div>
-            )
-          }
-        </header>
-      </div>
-    );
-  }
-  
+  )
 }
 
 const columns = [
