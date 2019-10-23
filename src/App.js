@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-import { Select, Table, Divider, Typography } from 'antd'
+import { Table, Typography, Button } from 'antd'
 import 'antd/dist/antd.css'
 import dayjs from 'dayjs'
 import StarWarsLogo from './star-wars-logo.png'
@@ -9,8 +9,7 @@ import LazyLoad from 'react-lazyload'
 import { css } from '@emotion/core'
 import './App.css';
 
-const { Option } = Select;
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const override = css`
   display: block;
@@ -31,10 +30,9 @@ function App() {
   const [speciesLoading, setSpeciesLoading] = useState(true)
   const [selectedPerson, setSelectedPerson] = useState('')
 
-  const [allLoaded, setAllLoaded] = useState(localStorage.getItem('allLoaded') || false)
+  const [jediMode, setJediMode] = useState(false)
 
   useEffect(() => {
-    console.log(1)
     var pagesRequired = 0
     fetch(
       'https://swapi.co/api/people/'
@@ -65,7 +63,6 @@ function App() {
   }, [swapiPersonData])
 
   useEffect(() => {
-    console.log(2)
     var pagesRequired = 0
     fetch(
       'https://swapi.co/api/species/'
@@ -96,7 +93,6 @@ function App() {
   }, [swapiSpeciesData])
 
   useEffect(() => {
-    console.log(3)
     var pagesRequired = 0
     fetch(
       'https://swapi.co/api/planets/'
@@ -127,7 +123,6 @@ function App() {
   }, [swapiPlanetData])
 
   useEffect(() => {
-    console.log(4)
     fetch(
       'https://swapi.co/api/films/'
     )
@@ -142,17 +137,13 @@ function App() {
     })
   }, [swapiFilmData])
 
-  function onSelect(value, event) {
-    setSelectedPerson(value)
-  }
-
   function trackChange(e) {
     const value = e.currentTarget.value
     setSelectedPerson(value)
   }
 
   return (
-    <div className="App">
+    <div className={"App " + (jediMode ? 'jedi-mode' : '')}>
       <header className="App-header">
         <LazyLoad>
           <img
@@ -170,7 +161,7 @@ function App() {
             className="barloader"
           /> :
           <div>
-              <input autofocus type="text" list="people" onChange={trackChange} placeholder="Pick your character"/>
+              <input autoFocus type="text" list="people" onChange={trackChange} placeholder="Pick your character"/>
               <datalist id="people">
                 {Object.keys(swapiPersonData).map((value, index) => {
                     return (
@@ -193,6 +184,11 @@ function App() {
             }
           </div>
         }
+        <Button className="jedi-mode-button" onClick={(e) => {
+          const value = e.currentTarget.value
+          setJediMode(!jediMode)
+          console.log(jediMode)
+        }}>{jediMode ? 'Padawan Mode' : 'Jedi Mode'}</Button>
       </header>
     </div>
   )
