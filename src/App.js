@@ -182,7 +182,6 @@ function App() {
   function returnDropdown() {
     return (
       <div>
-        {/* Inspired by https://codepen.io/BTM/pen/ZKxKPo?editors=1111 */}
         <input autoFocus type="text" list="people" onChange={trackChange} placeholder="Pick your character"/>
         <datalist id="people">
           {Object.keys(swapiPersonData).map((value, index) => {
